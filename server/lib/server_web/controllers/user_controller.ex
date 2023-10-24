@@ -36,9 +36,24 @@ defmodule ServerWeb.UserController do
     end
   end
 
+  swagger_path :show do
+    get("/api/users/{id}")
+    description("Show a user")
+    parameter(:path, :string, :id, "User id", required: true)
+    response(code(:ok), "Success")
+  end
+
   def show(conn, %{"id" => id}) do
     user = Account.get_user!(id)
     render(conn, :show, user: user)
+  end
+
+  swagger_path :update do
+    put("/api/users/{id}")
+    description("Update a user")
+    parameter(:path, :string, :id, "User id", required: true)
+    parameter(:body, :user, :body, "User to update", required: true)
+    response(code(:ok), "Success")
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -47,6 +62,13 @@ defmodule ServerWeb.UserController do
     with {:ok, %User{} = user} <- Account.update_user(user, user_params) do
       render(conn, :show, user: user)
     end
+  end
+
+  swagger_path :delete do
+    PhoenixSwagger.Path.delete("/api/users/{id}")
+    description("Delete a user")
+    parameter(:path, :string, :id, "User id", required: true)
+    response(code(:no_content), "Success")
   end
 
   def delete(conn, %{"id" => id}) do

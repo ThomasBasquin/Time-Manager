@@ -1,11 +1,19 @@
 defmodule ServerWeb.WorkingTimeController do
   use ServerWeb, :controller
-  import Server.Repo
+  use PhoenixSwagger
+  import Plug.Conn.Status, only: [code: 1]
 
   alias Server.Account
   alias Server.Account.WorkingTime
 
   action_fallback ServerWeb.FallbackController
+
+  swagger_path :index do
+    get("/api/working_times")
+    description("List of working_times")
+    parameter(:query, :string, :id, "Filter by id")
+    response(code(:ok), "Success")
+  end
 
   def index(conn, _params) do
     working_times = Account.list_working_times()
@@ -33,6 +41,13 @@ defmodule ServerWeb.WorkingTimeController do
     |> json(response_list)
   end
 
+  swagger_path :create do
+    post("/api/working_times")
+    description("Create a working_time")
+    parameter(:body, :working_time, :body, "WorkingTime to create", required: true)
+    response(code(:created), "Success")
+  end
+
   def create(conn, %{"working_time" => working_time_params}) do
     with {:ok, %WorkingTime{} = working_time} <- Account.create_working_time(working_time_params) do
       conn
@@ -40,6 +55,13 @@ defmodule ServerWeb.WorkingTimeController do
       |> put_resp_header("location", ~p"/api/working_times/#{working_time}")
       |> render(:show, working_time: working_time)
     end
+  end
+
+  swagger_path :show do
+    get("/api/working_times/{id}")
+    description("Show a working_time")
+    parameter(:path, :string, :id, "WorkingTime id", required: true)
+    response(code(:ok), "Success")
   end
 
   def show(conn, %{"id" => id}) do
@@ -66,6 +88,14 @@ defmodule ServerWeb.WorkingTimeController do
     |> json(response)
   end
 
+  swagger_path :update do
+    put("/api/working_times/{id}")
+    description("Update a working_time")
+    parameter(:path, :string, :id, "WorkingTime id", required: true)
+    parameter(:body, :working_time, :body, "WorkingTime to update", required: true)
+    response(code(:ok), "Success")
+  end
+
   def update(conn, %{"id" => id, "working_time" => working_time_params}) do
     working_time = Account.get_working_time!(id)
 
@@ -73,6 +103,13 @@ defmodule ServerWeb.WorkingTimeController do
            Account.update_working_time(working_time, working_time_params) do
       render(conn, :show, working_time: working_time)
     end
+  end
+
+  swagger_path :delete do
+    PhoenixSwagger.Path.delete("/api/working_times/{id}")
+    description("Delete a working_time")
+    parameter(:path, :string, :id, "WorkingTime id", required: true)
+    response(code(:no_content), "Success")
   end
 
   def delete(conn, %{"id" => id}) do

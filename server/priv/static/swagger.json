@@ -1,6 +1,202 @@
 {
   "swagger": "2.0",
   "paths": {
+    "/api/working_times/{id}": {
+      "put": {
+        "tags": [
+          "WorkingTime"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "WorkingTime id"
+          },
+          {
+            "type": "body",
+            "required": true,
+            "name": "body",
+            "in": "working_time",
+            "description": "WorkingTime to update"
+          }
+        ],
+        "operationId": "ServerWeb.WorkingTimeController.update",
+        "description": "Update a working_time"
+      },
+      "get": {
+        "tags": [
+          "WorkingTime"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "WorkingTime id"
+          }
+        ],
+        "operationId": "ServerWeb.WorkingTimeController.show",
+        "description": "Show a working_time"
+      },
+      "delete": {
+        "tags": [
+          "WorkingTime"
+        ],
+        "summary": "",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "WorkingTime id"
+          }
+        ],
+        "operationId": "ServerWeb.WorkingTimeController.delete",
+        "description": "Delete a working_time"
+      }
+    },
+    "/api/working_times": {
+      "post": {
+        "tags": [
+          "WorkingTime"
+        ],
+        "summary": "",
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "body",
+            "required": true,
+            "name": "body",
+            "in": "working_time",
+            "description": "WorkingTime to create"
+          }
+        ],
+        "operationId": "ServerWeb.WorkingTimeController.create",
+        "description": "Create a working_time"
+      },
+      "get": {
+        "tags": [
+          "WorkingTime"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": false,
+            "name": "query",
+            "in": "string",
+            "description": "Filter by id"
+          }
+        ],
+        "operationId": "ServerWeb.WorkingTimeController.index",
+        "description": "List of working_times"
+      }
+    },
+    "/api/users/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "User id"
+          },
+          {
+            "type": "body",
+            "required": true,
+            "name": "body",
+            "in": "user",
+            "description": "User to update"
+          }
+        ],
+        "operationId": "ServerWeb.UserController.update",
+        "description": "Update a user"
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "User id"
+          }
+        ],
+        "operationId": "ServerWeb.UserController.show",
+        "description": "Show a user"
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "User id"
+          }
+        ],
+        "operationId": "ServerWeb.UserController.delete",
+        "description": "Delete a user"
+      }
+    },
     "/api/users": {
       "post": {
         "tags": [
@@ -8,7 +204,7 @@
         ],
         "summary": "",
         "responses": {
-          "200": {
+          "201": {
             "description": "Success"
           }
         },
@@ -45,6 +241,127 @@
         ],
         "operationId": "ServerWeb.UserController.index",
         "description": "List of users"
+      }
+    },
+    "/api/clocks/{id}": {
+      "put": {
+        "tags": [
+          "Clock"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "Clock id"
+          },
+          {
+            "type": "body",
+            "required": true,
+            "name": "body",
+            "in": "clock",
+            "description": "Clock to update"
+          }
+        ],
+        "operationId": "ServerWeb.ClockController.update",
+        "description": "Update a clock"
+      },
+      "get": {
+        "tags": [
+          "Clock"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "Clock id"
+          }
+        ],
+        "operationId": "ServerWeb.ClockController.show",
+        "description": "Show a clock"
+      },
+      "delete": {
+        "tags": [
+          "Clock"
+        ],
+        "summary": "",
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": true,
+            "name": "path",
+            "in": "string",
+            "description": "Clock id"
+          }
+        ],
+        "operationId": "ServerWeb.ClockController.delete",
+        "description": "Delete a clock"
+      }
+    },
+    "/api/clocks": {
+      "post": {
+        "tags": [
+          "Clock"
+        ],
+        "summary": "",
+        "responses": {
+          "201": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "body",
+            "required": true,
+            "name": "body",
+            "in": "clock",
+            "description": "Clock to create"
+          }
+        ],
+        "operationId": "ServerWeb.ClockController.create",
+        "description": "Create a clock"
+      },
+      "get": {
+        "tags": [
+          "Clock"
+        ],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "parameters": [
+          {
+            "type": "id",
+            "required": false,
+            "name": "query",
+            "in": "string",
+            "description": "Filter by id"
+          }
+        ],
+        "operationId": "ServerWeb.ClockController.index",
+        "description": "List of clocks"
       }
     }
   },
