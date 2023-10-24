@@ -50,4 +50,19 @@ defmodule Server.AccountFixtures do
 
     working_time
   end
+
+  @doc """
+  Generate a clock.
+  """
+  def clock_fixture(attrs \\ %{}) do
+    {:ok, clock} =
+      attrs
+      |> Enum.into(%{
+        status: true,
+        time: ~U[2023-10-23 07:47:00Z]
+      })
+      |> Server.Account.create_clock()
+
+    clock
+  end
 end

@@ -9,6 +9,7 @@ defmodule ServerWeb.Router do
     pipe_through :api
     resources "/users", UserController
     resources "/workingtimes", WorkingTimeController
+    resources "/clocks", ClockController
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
