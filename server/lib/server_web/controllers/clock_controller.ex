@@ -8,7 +8,25 @@ defmodule ServerWeb.ClockController do
 
   def index(conn, _params) do
     clocks = Account.list_clocks()
-    render(conn, :index, clocks: clocks)
+    clocks_with_users = Server.Repo.preload(clocks, :user)
+
+    response_list =
+      Enum.map(clocks_with_users, fn clock ->
+        %{
+          "id" => clock.id,
+          "time" => clock.time,
+          "status" => clock.status,
+          "user_id" => clock.user_id,
+          "user" => %{
+            "username" => clock.user.username,
+            "email" => clock.user.email
+          }
+        }
+      end)
+
+    conn
+    |> put_status(:ok)
+    |> json(response_list)
   end
 
   def create(conn, %{"clock" => clock_params}) do
@@ -22,7 +40,22 @@ defmodule ServerWeb.ClockController do
 
   def show(conn, %{"id" => id}) do
     clock = Account.get_clock!(id)
-    render(conn, :show, clock: clock)
+    clock_with_user = Server.Repo.preload(clock, :user)
+
+    response = %{
+      "id" => clock_with_user.id,
+      "time" => clock_with_user.time,
+      "status" => clock_with_user.status,
+      "user_id" => clock_with_user.user_id,
+      "user" => %{
+        "username" => clock_with_user.user.username,
+        "email" => clock_with_user.user.email
+      }
+    }
+
+    conn
+    |> put_status(:ok)
+    |> json(response)
   end
 
   def update(conn, %{"id" => id, "clock" => clock_params}) do
