@@ -31,6 +31,16 @@ config :server, ServerWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :server, Server.Mailer, adapter: Swoosh.Adapters.Local
 
+config :server, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      # phoenix routes will be converted to swagger paths
+      router: ServerWeb.Router,
+      # (optional) endpoint config used to set host, port and https schemes.
+      endpoint: ServerWeb.Endpoint
+    ]
+  }
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

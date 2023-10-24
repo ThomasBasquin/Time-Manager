@@ -1,14 +1,30 @@
 defmodule ServerWeb.UserController do
   use ServerWeb, :controller
+  use PhoenixSwagger
+  import Plug.Conn.Status, only: [code: 1]
 
   alias Server.Account
   alias Server.Account.User
 
   action_fallback ServerWeb.FallbackController
+  # Ajout de la route GET /api/users
+  swagger_path :index do
+    get("/api/users")
+    description("List of users")
+    parameter(:query, :string, :id, "Filter by id")
+    response(code(:ok), "Success")
+  end
 
   def index(conn, _params) do
     users = Account.list_users()
     render(conn, :index, users: users)
+  end
+
+  swagger_path :create do
+    post("/api/users")
+    description("Create a user")
+    parameter(:body, :user, :body, "User to create", required: true)
+    response(code(:created), "Success")
   end
 
   def create(conn, %{"user" => user_params}) do

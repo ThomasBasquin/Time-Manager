@@ -12,6 +12,21 @@ defmodule ServerWeb.Router do
     resources "/clocks", ClockController
   end
 
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :server,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      info: %{
+        version: "1.0",
+        title: "My App"
+      }
+    }
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:server, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
