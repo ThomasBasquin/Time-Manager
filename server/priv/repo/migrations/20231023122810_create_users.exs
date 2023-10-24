@@ -8,5 +8,8 @@ defmodule Server.Repo.Migrations.CreateUsers do
 
       timestamps(type: :utc_datetime)
     end
+
+    execute("CREATE UNIQUE INDEX users_username_index ON users (username)")
+    execute("CREATE UNIQUE INDEX users_email_index ON users (email)")
   end
 end

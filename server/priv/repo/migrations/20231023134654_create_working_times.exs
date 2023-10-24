@@ -3,7 +3,6 @@ defmodule Server.Repo.Migrations.CreateWorkingTimes do
 
   def change do
     create table(:working_times) do
-      add :user_id, :integer
       add :start, :naive_datetime
       add :end, :naive_datetime
 

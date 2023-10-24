@@ -14,5 +14,9 @@ defmodule Server.Account.User do
     user
     |> cast(attrs, [:email, :username])
     |> validate_required([:email, :username])
+    # Ajout de la contrainte d'unicité sur "username"
+    |> unique_constraint(:username)
+    # Ajout de la contrainte d'unicité sur "email"
+    |> unique_constraint(:email)
   end
 end
