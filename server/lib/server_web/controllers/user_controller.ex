@@ -2,11 +2,12 @@ defmodule ServerWeb.UserController do
   use ServerWeb, :controller
   use PhoenixSwagger
   import Plug.Conn.Status, only: [code: 1]
+  import Ecto.Query
 
   alias Server.Account
   alias Server.Account.User
 
-  action_fallback ServerWeb.FallbackController
+  action_fallback(ServerWeb.FallbackController)
   # Ajout de la route GET /api/users
   swagger_path :index do
     get("/api/users")
@@ -16,7 +17,7 @@ defmodule ServerWeb.UserController do
   end
 
   def index(conn, _params) do
-    users = Account.list_users()
+    users = Account.list_users(_params)
     render(conn, :index, users: users)
   end
 

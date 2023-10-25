@@ -17,8 +17,24 @@ defmodule Server.Account do
       [%User{}, ...]
 
   """
-  def list_users do
-    Repo.all(User)
+  def list_users(params \\ %{}) do
+    query = User
+
+    query =
+      if email = params["email"] do
+        from(u in query, where: u.email == ^email)
+      else
+        query
+      end
+
+    query =
+      if username = params["username"] do
+        from(u in query, where: u.username == ^username)
+      else
+        query
+      end
+
+    Repo.all(query)
   end
 
   @doc """
@@ -36,6 +52,8 @@ defmodule Server.Account do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  def get_user_by_email!(email), do: Repo.get_by!(User, email: email)
 
   @doc """
   Creates a user.
