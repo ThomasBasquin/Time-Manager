@@ -48,7 +48,8 @@ defmodule Server.MixProject do
       {:timex, "~> 3.7"},
       {:phoenix_swagger, "~> 0.8"},
       {:ex_json_schema, "~> 0.5"},
-      {:poison, "~> 3.0"}
+      {:poison, "~> 3.0"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 
