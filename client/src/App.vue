@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import Login from '@/components/Login.vue'
 </script>
 
 <template>
-  <Button>Click me</Button>
+  <div>
+    <Login />
+  </div>
 </template>
