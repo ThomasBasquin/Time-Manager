@@ -151,6 +151,28 @@ defmodule Server.Account do
   """
   def get_working_time!(id), do: Repo.get!(WorkingTime, id)
 
+  def get_working_times_of_user!(id), do: Repo.get_by!(WorkingTime, user_id: String.to_integer(id))
+
+  def list_working_times(params) do
+    query = WorkingTime
+
+    query =
+      if user_id = params["user_id"] do
+        from(u in query, where: u.user_id == ^user_id)
+      else
+        query
+      end
+
+    query =
+      if id = params["id"] do
+        from(u in query, where: u.id == ^id)
+      else
+        query
+      end
+
+    Repo.all(query)
+  end
+
   @doc """
   Creates a working_time.
 

@@ -8,7 +8,13 @@ defmodule ServerWeb.Router do
   scope "/api", ServerWeb do
     pipe_through :api
     resources "/users", UserController
-    resources "/workingtimes", WorkingTimeController
+    #resources "/workingtimes", WorkingTimeController
+    post "/workingtimes", WorkingTimeController, :create
+    put "/workingtimes/:id", WorkingTimeController, :update
+    delete "/workingtimes/:id", WorkingTimeController, :delete
+    get "/workingtimes/:user_id/:id", WorkingTimeController, :show
+    get "/workingtimes/:user_id", WorkingTimeController, :show
+    get "/workingtimes", WorkingTimeController, :show
     resources "/clocks", ClockController
   end
 
