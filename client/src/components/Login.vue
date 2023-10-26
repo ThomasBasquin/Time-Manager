@@ -13,6 +13,11 @@ import axios from 'axios'
 import { store } from '@/store.ts'
 
 
+if (localStorage.getItem('user') != null) {
+    store.user = JSON.parse(localStorage.getItem('user') || '{}')
+    store.count = 2
+}
+
 async function Login() {
     try {
         // Effectuer la requête GET pour récupérer l'utilisateur
@@ -32,6 +37,7 @@ async function Login() {
             }
         }
         if (store.user.email != '') {
+            localStorage.setItem('user', JSON.stringify(store.user))
             store.count = 2
             store.email = ''
             store.username = ''
@@ -82,6 +88,7 @@ async function deleteUser() {
         }
         store.email = ''
         store.username = ''
+        localStorage.removeItem('user')
     } catch (error) {
         console.error('Erreur lors de la suppression de l\'utilisateur :', error)
     }
