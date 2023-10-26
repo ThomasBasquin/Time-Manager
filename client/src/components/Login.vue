@@ -92,7 +92,39 @@ async function deleteUser() {
     } catch (error) {
         console.error('Erreur lors de la suppression de l\'utilisateur :', error)
     }
+}
 
+async function logoutUser() {
+    store.count = 0
+    store.user = {
+        email: '',
+        username: '',
+        id: 0
+    }
+    store.email = ''
+    store.username = ''
+    localStorage.removeItem('user')
+}
+
+async function editUser() {
+    try {
+        // Effectuer la requête PUT pour modifier l'utilisateur
+        const response = await axios.put('http://localhost:4000/api/users/' + store.user.id, {
+            user: {
+                email: store.email,
+                username: store.username
+            }
+        })
+        // Traiter la réponse de l'API
+        const user = response.data
+        console.log('Utilisateur modifié :', user)
+        store.user = user.data
+        store.count = 2
+        store.email = ''
+        store.username = ''
+    } catch (error) {
+        console.error('Erreur lors de la modification de l\'utilisateur :', error)
+    }
 }
 </script>
 
@@ -128,12 +160,27 @@ async function deleteUser() {
         <CardHeader>
             <CardTitle>Logged as {{ store.user.username }}</CardTitle>
             <CardDescription>{{ store.user.email }}</CardDescription>
+            <Button @click="store.count = 3">Edit Profile</Button>
         </CardHeader>
         <CardContent>
             <CardDescription>Vous êtes connecté !</CardDescription>
         </CardContent>
         <CardFooter class="flex flex-row-reverse">
+            <Button @click="logoutUser">Logout</Button>
             <Button class="mr-2" @click="deleteUser">Delete account</Button>
+        </CardFooter>
+    </Card>
+    <Card v-if="store.count == 3" class="w-2/4 h-2/4">
+        <CardHeader>
+            <CardTitle>Logged as {{ store.user.username }}</CardTitle>
+            <CardDescription>{{ store.user.email }}</CardDescription>
+        </CardHeader>
+        <CardContent class="space-y-2">
+            <Input v-model="store.username" type="text" :placeholder="store.user.username" />
+            <Input v-model="store.email" type="email" :placeholder="store.user.email" />
+        </CardContent>
+        <CardFooter class="flex flex-row-reverse">
+            <Button @click="editUser">Change information</Button>
         </CardFooter>
     </Card>
 </template>
