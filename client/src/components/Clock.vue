@@ -17,7 +17,7 @@
     if (working.value) {
       dateStart.value = new Date();
       try {
-        let response = await axios.post("/api/clocks", {
+        let response = await axios.post("http://localhost:4000/api/clocks", {
           clock: {
             user_id: 1,
             user: {
@@ -30,15 +30,15 @@
         });
         dateStart.value = response.data.time;
         userId = response.data.id;
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
     } else {
       try {
         dateEnd.value = new Date();
-        let response = await axios.get("/api/clocks", {
-          params: { userId: 1 },
-        });
+        let response = await axios.get("http://localhost:4000/api/clocks/2");
+        console.log(response.data);
         let clockData = response.data;
 
         if (clockData.status) {
@@ -50,7 +50,7 @@
           };
           // TODO Créer un working time
 
-          await axios.post("/api/clocks", {
+          await axios.post("http://localhost:4000/api/clocks", {
             clock: {
               user_id: 1,
               user: {
@@ -71,6 +71,7 @@
 
 <template>
   <button
+    v-if="store.user.id"
     @click="toggleWorkStatus"
     :class="{
       'bg-green-500 hover:bg-green-700': !working,
