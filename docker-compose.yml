@@ -11,4 +11,21 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=ecto://postgres:y5Pbd9!zJ@database/server_dev
+      - SECRET_KEY_BASE=PIka98wGA3efhWhEiRTnJAGXdDlf9P9CqeaweKg8vMSCIY0+fYJWDlavmq88kMkg
     ports:
+      - "4000:4000"
+    depends_on:
+      - database
+  database:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=y5Pbd9!zJ
+      - POSTGRES_DB=server_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
