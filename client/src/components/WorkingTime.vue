@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import axios from 'axios'
 import CardList from './CardList.vue'
+import { ref } from 'vue'
 
 const state = reactive({ count: 0 })
 
@@ -22,6 +23,9 @@ function changeState() {
         state.count = 0;
 }
 
+let workingtimes = ref([]);
+let isLoaded = ref(false)
+
 async function getWorkingTimes() {
     try {
         // Effectuer la requête GET pour récupérer l'utilisateur
@@ -29,7 +33,8 @@ async function getWorkingTimes() {
         const response = await axios.get(request, {})
 
         // Traiter la réponse de l'API
-        const workingtimes = response.data
+        workingtimes = response.data
+        isLoaded.value = true
         console.log('working time récupéré :', workingtimes)
     } catch (error) {
         
@@ -37,10 +42,13 @@ async function getWorkingTimes() {
     }
 }
 
+console.log(store.user.id)
+getWorkingTimes()
+
 </script>
 
 <template>
-    <Card class="flex">
+    <Card class="flex w-11/12">
         <Card class="w-1/4">
             <CardHeader class="">
                 <CardTitle>Clock In/Out</CardTitle>
@@ -53,10 +61,10 @@ async function getWorkingTimes() {
             <CardFooter>
             </CardFooter>
         </Card>
-        <Card v-if="store.user.id != 0" class="w-3/4">
+        <Card v-if="isLoaded === true" class="w-3/4">
             <ul id="demo">
-                <li v-repeat="workingtimes" class="item-{{$index}}">
-                    {{$index}} - {{parentMsg}} {{childMsg}}
+                <li v-for="wtime in workingtimes" class="item-{{$index}}">
+                    {{$index}} - {{wtime.user.id}} - {{wtime.end}} - {{wtime.start}}
                 </li>
             </ul>
         </Card>

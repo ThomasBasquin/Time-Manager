@@ -13,7 +13,7 @@ import {
 
 <template>
   <Tabs default-value="login" class="w-screen">
-    <TabsList class="grid w-full grid-cols-3">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="login">
         Account
       </TabsTrigger>
@@ -25,7 +25,7 @@ import {
       </TabsTrigger>
       <TabsTrigger value="WorkingTime">
         Working Time
-      </TabsTrigger>"
+      </TabsTrigger>
     </TabsList>
     <TabsContent value="login" class="justify-center items-center flex flex-col">
       <Login />

@@ -11,7 +11,7 @@ let isLoaded = ref(false)
 
 getWorkingTimes()
 async function getWorkingTimes() {
-  axios.get('http://localhost:4000/api/workingtimes/')
+  axios.get('http://localhost:4000/api/workingtimes/' + store.user.id)
   .then(function (response: { data: any; }) {
     // Gérer la réponse ici
     workingtimes = response.data
