@@ -2,40 +2,41 @@ defmodule ServerWeb.Router do
   use ServerWeb, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/api", ServerWeb do
-    pipe_through :api
+    pipe_through(:api)
     # users routes
 
-    post "users", UserController, :create
-    put "users/:id", UserController, :update
-    delete "users/:id", UserController, :delete
+    post("/users", UserController, :create)
+    put("/users/:id", UserController, :update)
+    delete("/users/:id", UserController, :delete)
 
-    get "users/:id", UserController, :index
-    get "users", UserController, :index
+    get("/users/:id", UserController, :index)
+    get("/users", UserController, :index)
 
     # workingTime routes
 
-    post "/workingtimes", WorkingTimeController, :create
-    put "/workingtimes/:id", WorkingTimeController, :update
-    delete "/workingtimes/:id", WorkingTimeController, :delete
+    post("/workingtimes", WorkingTimeController, :create)
+    put("/workingtimes/:id", WorkingTimeController, :update)
+    delete("/workingtimes/:id", WorkingTimeController, :delete)
 
-    get "/workingtimes/:user_id/:id", WorkingTimeController, :show
-    get "/workingtimes/:user_id", WorkingTimeController, :show
-    get "/workingtimes", WorkingTimeController, :show
+    get("/workingtimes/:user_id/:id", WorkingTimeController, :show)
+    get("/workingtimes/:user_id", WorkingTimeController, :show)
+    get("/workingtimes", WorkingTimeController, :show)
 
     # clocks routes
 
-    get "clocks/:id", ClockController, :show
-    post "clocks/:id", ClockController, :create
+    get("/clocks/:id", ClockController, :show)
+    post("/clocks/:id", ClockController, :create)
   end
 
   scope "/api/swagger" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+    forward("/", PhoenixSwagger.Plug.SwaggerUI,
       otp_app: :server,
       swagger_file: "swagger.json"
+    )
   end
 
   def swagger_info do
@@ -57,10 +58,10 @@ defmodule ServerWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      pipe_through([:fetch_session, :protect_from_forgery])
 
-      live_dashboard "/dashboard", metrics: ServerWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: ServerWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

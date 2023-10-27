@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :server, Server.Repo,
   username: "postgres",
-  password: "Z^wr3GUJ",
+  password: "postgres",
   hostname: "localhost",
   database: "server_dev",
   stacktrace: true,
