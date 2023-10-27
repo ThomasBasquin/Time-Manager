@@ -4,7 +4,7 @@ import Config
 config :server, Server.Repo,
   username: "postgres",
   password: "y5Pbd9!zJ",
-  hostname: "localhost",
+  hostname: "database",
   database: "server_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

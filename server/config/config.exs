@@ -13,7 +13,8 @@ config :server,
 
 # Configures the endpoint
 config :server, ServerWeb.Endpoint,
-  url: [host: "localhost"],
+  url: "ecto://postgres:y5Pbd9!zJ@database/server_dev",
+  server: true,
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
   render_errors: [
     formats: [json: ServerWeb.ErrorJSON],

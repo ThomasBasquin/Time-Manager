@@ -1,6 +1,17 @@
 version: "3"
 
 services:
+  database:
+    image: postgres:16
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=y5Pbd9!zJ
+      - POSTGRES_DB=server_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   client:
     build:
       context: ./client
@@ -18,14 +29,6 @@ services:
       - "4000:4000"
     depends_on:
       - database
-  database:
-    image: postgres:16
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=y5Pbd9!zJ
-      - POSTGRES_DB=server_dev
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:

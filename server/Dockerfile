@@ -21,8 +21,13 @@ COPY config config
 COPY lib lib
 COPY priv priv
 
+# Copier le répertoire des migrations Ecto
+COPY priv/repo priv/repo
+
 # Récupérer et compiler les dépendances et construire le projet
 RUN mix deps.get
+RUN mix ecto.create
+RUN mix ecto.migrate
 RUN mix deps.compile
 RUN mix phx.digest
 RUN mix release
