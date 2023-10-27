@@ -7,9 +7,29 @@ defmodule ServerWeb.Router do
 
   scope "/api", ServerWeb do
     pipe_through :api
-    resources "/users", UserController
-    resources "/workingtimes", WorkingTimeController
-    resources "/clocks", ClockController
+    # users routes
+
+    post "users", UserController, :create
+    put "users/:id", UserController, :update
+    delete "users/:id", UserController, :delete
+
+    get "users/:id", UserController, :index
+    get "users", UserController, :index
+
+    # workingTime routes
+
+    post "/workingtimes", WorkingTimeController, :create
+    put "/workingtimes/:id", WorkingTimeController, :update
+    delete "/workingtimes/:id", WorkingTimeController, :delete
+
+    get "/workingtimes/:user_id/:id", WorkingTimeController, :show
+    get "/workingtimes/:user_id", WorkingTimeController, :show
+    get "/workingtimes", WorkingTimeController, :show
+
+    # clocks routes
+
+    get "clocks/:id", ClockController, :show
+    post "clocks/:id", ClockController, :create
   end
 
   scope "/api/swagger" do
