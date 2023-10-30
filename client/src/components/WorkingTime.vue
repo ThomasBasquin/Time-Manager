@@ -43,6 +43,7 @@ async function getClock() {
 
         // Traiter la réponse de l'API
         clock = response.data
+        console.log("la clock est: " + clock.status)
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur :', error)
     }
@@ -88,7 +89,7 @@ const dateFormat = (dateOrigine: any) => {
                     </Card>
                 </li>
             </ul>
-            <Card v-if="dateFormat(clock.start).length != 0" class="m-3">
+            <Card v-if="clock.status == true" class="m-3">
                 <CardContent class="mt-5">
                     <CardTitle>{{dateFormat(clock.start)}}</CardTitle>
                     <CardDescription>Status: En cours</CardDescription>

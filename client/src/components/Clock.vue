@@ -18,27 +18,29 @@
         const response = await axios.get(request, {})
 
         // Traiter la réponse de l'API
+        dateStart.value = response.data.time;
+        clockId.value = response.data.id;
         clock = response.data
+        if (clock.status == true)
+        store.working = true;
+        else
+        store.working = false;
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur :', error)
     }
   }
 
-  getClock()
-
-  let working;
-  if (dateFormat(clock.start).length != 0)
-    working = ref(true);
-  else
-    working = ref(false);
-  const elapsedTime = ref("");
-  let interval;
   let dateStart = ref(new Date());
+  let clockId = ref(0);
+  
+  getClock()
+  
+  const elapsedTime = ref("");
   let dateEnd = ref(new Date());
+  let interval;
   let userId = store.user.id;
   let userEmail = store.user.email;
   let userName = store.user.username;
-  let clockId = ref(0);
 
   function calculateElapsedTime() {
     if (!dateStart.value) {
@@ -69,14 +71,14 @@
   }
 
   async function toggleWorkStatus() {
-    working.value = !working.value;
-    if (working.value) {
+    store.working = !store.working;
+    if (store.working) {
       dateStart.value = new Date();
       calculateElapsedTime();
 
       interval = setInterval(calculateElapsedTime, 1000);
       try {
-        let response = await axios.post("http://localhost:4000/api/clocks/" + store.user.id, {
+        let response = await axios.put("http://localhost:4000/api/clocks/" + store.user.id, {
           clock: {
             user_id: userId,
             user: {
@@ -87,8 +89,8 @@
             status: true,
           },
         });
-        dateStart.value = response.data.data.time;
-        clockId.value = response.data.data.id;
+        dateStart.value = response.data.time;
+        clockId.value = response.data.id;
       } catch (error) {
         console.log(error);
       }
@@ -99,7 +101,7 @@
       try {
         dateEnd.value = new Date();
         let response = await axios.get(
-          "http://localhost:4000/api/clocks/" + clockId.value
+          "http://localhost:4000/api/clocks/" + store.user.id
         );
         let clockData = response.data;
 
@@ -119,7 +121,7 @@
             },
           });
 
-          await axios.post("http://localhost:4000/api/clocks/" +  + store.user.id, {
+          await axios.put("http://localhost:4000/api/clocks/" +  + store.user.id, {
             clock: {
               user_id: userId,
               user: {
@@ -142,13 +144,13 @@
   <div v-if="store.user.id" class="flex flex-col items-center mt-4"> 
     <button @click="toggleWorkStatus"
       :class="{
-        'bg-green-500 hover:bg-green-700': !working,
-        'bg-red-500 hover:bg-red-700': working,
+        'bg-green-500 hover:bg-green-700': !store.working,
+        'bg-red-500 hover:bg-red-700': store.working,
       }"
       class="text-white font-bold py-2 px-4 rounded transition duration-300">
-      {{ working ? "Terminer le travail" : "Commencer le travail" }}
+      {{ store.working ? "Terminer le travail" : "Commencer le travail" }}
     </button>
-    <div v-if="store.user.id && working" class="flex flex-col mt-4 items-center">
+    <div v-if="store.user.id && store.working" class="flex flex-col mt-4 items-center">
       <p class="text-gray-700 mt-2">
         Début du travail : {{ new Date(dateStart).toLocaleTimeString() }}
       </p>

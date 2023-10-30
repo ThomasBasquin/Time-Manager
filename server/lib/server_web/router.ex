@@ -1,4 +1,5 @@
 defmodule ServerWeb.Router do
+  alias Erl2exVendored.Results.Collector
   use ServerWeb, :router
 
   pipeline :api do
@@ -28,8 +29,10 @@ defmodule ServerWeb.Router do
 
     # clocks routes
 
-    get("/clocks/:id", ClockController, :show)
     post("/clocks/:id", ClockController, :create)
+    put("clocks/:id", ClockController, :update)
+
+    get("/clocks/:id", ClockController, :show)
   end
 
   scope "/api/swagger" do

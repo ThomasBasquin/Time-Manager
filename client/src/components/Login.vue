@@ -25,9 +25,8 @@ async function Login() {
             params: {
                 email: store.email
             }
-        }
+        })
 
-        )
         // Traiter la réponse de l'API
         const user = response.data
         console.log('Utilisateur récupéré :', user)
@@ -64,7 +63,6 @@ async function Register() {
         const user = response.data
         console.log('Utilisateur créé :', user)
         store.user = user.data
-        console.log(store.user)
         store.count = 2
         store.email = ''
         store.username = ''
