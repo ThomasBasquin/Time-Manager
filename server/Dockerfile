@@ -9,6 +9,11 @@ ENV MIX_ENV=prod \
 RUN mix local.hex --force && \
     mix local.rebar --force
 
+# Install debian packages
+RUN apt-get update && \
+    apt-get install --yes build-essential inotify-tools postgresql-client git && \
+    apt-get clean
+
 # Installer openssl
 RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
@@ -25,16 +30,18 @@ COPY priv priv
 COPY priv/repo priv/repo
 
 # Récupérer et compiler les dépendances et construire le projet
-RUN mix deps.get
-RUN mix ecto.create
-RUN mix ecto.migrate
-RUN mix deps.compile
-RUN mix phx.digest
-RUN mix release
+RUN mix deps.get && \
+    mix deps.compile && \
+    mix phx.digest && \
+    mix release
 
-# Passer à un utilisateur non-root pour des raisons de sécurité
-RUN chown -R nobody: /app
-USER nobody
+EXPOSE 4000
+
+# Copier le script entrypoint.sh
+COPY entrypoint.sh /app/entrypoint.sh
+
+# Rendre le script exécutable
+RUN chmod +x /app/entrypoint.sh
 
 # Exécuter l'application
-CMD ["_build/prod/rel/server/bin/server", "start"]
+CMD ["/app/entrypoint.sh"]

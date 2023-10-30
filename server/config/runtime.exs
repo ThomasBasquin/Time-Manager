@@ -32,9 +32,11 @@ end
 
   config :server, Server.Repo,
     # ssl: true,
-    url: "ecto://postgres:y5Pbd9!zJ@database/server_dev",
-    timeout: 10000,
-    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+    username: "postgres",
+    password: "y5Pbd9!zJ",
+    database: "server_dev",
+    hostname: "database",
+    pool_size: 10,
     socket_options: maybe_ipv6
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
@@ -49,7 +51,7 @@ end
   #     You can generate one by calling: mix phx.gen.secret
   #     """
 
-  host = System.get_env("PHX_HOST") || "example.com"
+  host = System.get_env("PHX_HOST") || "database"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :server, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")

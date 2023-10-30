@@ -1,8 +1,32 @@
 version: "3"
 
 services:
+  client:
+    image: totomadne/client:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+  server:
+    image: totomadne/server:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=ecto://postgres:y5Pbd9!zJ@database/server_dev
+      - SECRET_KEY_BASE=PIka98wGA3efhWhEiRTnJAGXdDlf9P9CqeaweKg8vMSCIY0+fYJWDlavmq88kMkg
+      - DBUSER=postgres
+      - DBPASSWORD=y5Pbd9!zJ
+      - DBDATABASE=server_dev
+      - DBPORT=5432
+      - DBHOST=database
+    ports:
+      - "4000:4000"
+    depends_on:
+      - database
   database:
-    image: postgres:16
+    image: postgres:latest
     restart: always
     ports:
       - 5432:5432
@@ -12,23 +36,6 @@ services:
       - POSTGRES_DB=server_dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "8080:80"
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    environment:
-      - DATABASE_URL=ecto://postgres:y5Pbd9!zJ@database/server_dev
-      - SECRET_KEY_BASE=PIka98wGA3efhWhEiRTnJAGXdDlf9P9CqeaweKg8vMSCIY0+fYJWDlavmq88kMkg
-    ports:
-      - "4000:4000"
-    depends_on:
-      - database
 
 volumes:
   postgres_data:
