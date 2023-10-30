@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { store } from '@/store.ts'
 import {
     Card,
@@ -9,26 +8,18 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import axios from 'axios'
-import CardList from './CardList.vue'
 import { ref } from 'vue'
-
-const state = reactive({ count: 0 })
-
-function changeState() {
-    if(state.count == 0)
-        state.count = 1;
-    else
-        state.count = 0;
-}
+import moment from 'moment'
+import Clock from "@/components/Clock.vue";
 
 let workingtimes = ref([]);
+let clock = ref([]);
 let isLoaded = ref(false)
 
 async function getWorkingTimes() {
     try {
-        // Effectuer la requête GET pour récupérer l'utilisateur
+        // Effectuer la requête GET pour récupérer les temps de travail
         const request = "http://localhost:4000/api/workingtimes/" + store.user.id
         const response = await axios.get(request, {})
 
@@ -42,21 +33,46 @@ async function getWorkingTimes() {
     }
 }
 
-console.log(store.user.id)
 getWorkingTimes()
+
+async function getClock() {
+    try {
+        // Effectuer la requête GET pour récupérer la clock
+        const request = "http://localhost:4000/api/clocks/" + store.user.id
+        const response = await axios.get(request, {})
+
+        // Traiter la réponse de l'API
+        clock = response.data
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur :', error)
+    }
+}
+
+getClock()
+
+const dateFormat = (dateOrigine: any) => {
+ return moment(dateOrigine).format('D MMMM YYYY, HH:mm:ss');
+} 
 
 </script>
 
 <template>
-    <Card class="flex w-11/12">
+    <div v-if="!store.user.id" class="flex items-center mt-10 justify-center">
+        <div class="text-center p-6 bg-white rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold text-red-600 mb-3">Connectez-vous</h2>
+            <p class="text-gray-700">
+                Merci de vous connecter pour enregistrer votre temps de travail
+            </p>
+        </div>
+    </div>
+    <Card v-if="store.user.id" class="flex w-11/12">
         <Card class="w-1/4">
             <CardHeader class="">
                 <CardTitle>Clock In/Out</CardTitle>
                 <CardDescription></CardDescription>
             </CardHeader>
             <CardContent class="">
-                <Button v-if="state.count == 0" class="w-32" @click="changeState">Clock In</Button>
-                <Button v-if="state.count == 1" class="w-32" @click="changeState">Clock Out</Button>
+                <Clock />
             </CardContent>
             <CardFooter>
             </CardFooter>
@@ -64,9 +80,20 @@ getWorkingTimes()
         <Card v-if="isLoaded === true" class="w-3/4">
             <ul id="demo">
                 <li v-for="wtime in workingtimes" class="item-{{$index}}">
-                    {{$index}} - {{wtime.user.id}} - {{wtime.end}} - {{wtime.start}}
+                    <Card class="m-3">
+                        <CardContent class="mt-5">
+                            <CardTitle>{{dateFormat(wtime.start)}} - {{dateFormat(wtime.end)}}</CardTitle>
+                            <CardDescription>Status: Terminée</CardDescription>
+                        </CardContent>
+                    </Card>
                 </li>
             </ul>
+            <Card v-if="dateFormat(clock.start).length != 0" class="m-3">
+                <CardContent class="mt-5">
+                    <CardTitle>{{dateFormat(clock.start)}}</CardTitle>
+                    <CardDescription>Status: En cours</CardDescription>
+                </CardContent>
+            </Card>
         </Card>
     </Card>
 </template>

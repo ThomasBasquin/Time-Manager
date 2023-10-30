@@ -8,7 +8,6 @@ import moment from 'moment'
 let workingtimes = ref([]);
 let isLoaded = ref(false)
 
-
 getWorkingTimes()
 async function getWorkingTimes() {
   axios.get('http://localhost:4000/api/workingtimes/' + store.user.id)

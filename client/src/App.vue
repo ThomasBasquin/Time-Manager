@@ -13,12 +13,9 @@ import {
 
 <template>
   <Tabs default-value="login" class="w-screen">
-    <TabsList class="grid w-full grid-cols-4">
+    <TabsList class="grid w-full grid-cols-3">
       <TabsTrigger value="login">
         Account
-      </TabsTrigger>
-      <TabsTrigger value="clock">
-        Clock
       </TabsTrigger>
       <TabsTrigger value="WorkingTimes">
         Working Times
@@ -29,9 +26,6 @@ import {
     </TabsList>
     <TabsContent value="login" class="justify-center items-center flex flex-col">
       <Login />
-    </TabsContent>
-    <TabsContent value="clock" class="justify-center items-center flex flex-col">
-      <Clock />
     </TabsContent>
     <TabsContent value="WorkingTimes" class="justify-center items-center flex flex-col">
       <WorkingTimes />

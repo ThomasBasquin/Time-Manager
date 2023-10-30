@@ -1,11 +1,36 @@
 <script setup>
   import axios from "axios";
   import { store } from "@/store";
-
   import { Button } from "@/components/ui/button";
   import { ref } from "vue";
+  import moment from 'moment'
 
-  const working = ref(false);
+  let clock = ref([]);
+
+  const dateFormat = (dateOrigine) => {
+    return moment(dateOrigine).format('D MMMM YYYY, HH:mm:ss');
+  }
+
+  async function getClock() {
+    try {
+        // Effectuer la requête GET pour récupérer la clock
+        const request = "http://localhost:4000/api/clocks/" + store.user.id
+        const response = await axios.get(request, {})
+
+        // Traiter la réponse de l'API
+        clock = response.data
+    } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur :', error)
+    }
+  }
+
+  getClock()
+
+  let working;
+  if (dateFormat(clock.start).length != 0)
+    working = ref(true);
+  else
+    working = ref(false);
   const elapsedTime = ref("");
   let interval;
   let dateStart = ref(new Date());
@@ -51,7 +76,7 @@
 
       interval = setInterval(calculateElapsedTime, 1000);
       try {
-        let response = await axios.post("http://localhost:4000/api/clocks", {
+        let response = await axios.post("http://localhost:4000/api/clocks/" + store.user.id, {
           clock: {
             user_id: userId,
             user: {
@@ -94,7 +119,7 @@
             },
           });
 
-          await axios.post("http://localhost:4000/api/clocks", {
+          await axios.post("http://localhost:4000/api/clocks/" +  + store.user.id, {
             clock: {
               user_id: userId,
               user: {
@@ -114,22 +139,8 @@
 </script>
 
 <template>
-  <div
-    v-if="!store.user.id"
-    class="flex items-center mt-10 justify-center">
-    <div class="text-center p-6 bg-white rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold text-red-600 mb-3">Connectez-vous</h2>
-      <p class="text-gray-700">
-        Merci de vous connecter pour enregistrer votre temps de travail
-      </p>
-    </div>
-  </div>
-
-  <div
-    v-if="store.user.id"
-    class="flex justify-center mt-4">
-    <button
-      @click="toggleWorkStatus"
+  <div v-if="store.user.id" class="flex flex-col items-center mt-4"> 
+    <button @click="toggleWorkStatus"
       :class="{
         'bg-green-500 hover:bg-green-700': !working,
         'bg-red-500 hover:bg-red-700': working,
@@ -137,13 +148,13 @@
       class="text-white font-bold py-2 px-4 rounded transition duration-300">
       {{ working ? "Terminer le travail" : "Commencer le travail" }}
     </button>
-    <div
-      v-if="store.user.id && working"
-      class="flex flex-col mt-4 items-center">
+    <div v-if="store.user.id && working" class="flex flex-col mt-4 items-center">
       <p class="text-gray-700 mt-2">
         Début du travail : {{ new Date(dateStart).toLocaleTimeString() }}
       </p>
-      <p class="text-gray-700 mt-2">Temps écoulé : {{ elapsedTime }}</p>
+      <p class="text-gray-700 mt-2">
+        Temps écoulé : {{ elapsedTime }}
+      </p>
     </div>
   </div>
 </template>
