@@ -51,17 +51,20 @@
 
       interval = setInterval(calculateElapsedTime, 1000);
       try {
-        let response = await axios.post("http://localhost:4000/api/clocks", {
-          clock: {
-            user_id: userId,
-            user: {
-              username: userName.value,
-              email: userEmail.value,
+        let response = await axios.post(
+          "http://157.230.19.191:4000/api/clocks",
+          {
+            clock: {
+              user_id: userId,
+              user: {
+                username: userName.value,
+                email: userEmail.value,
+              },
+              time: dateStart.value.toISOString(),
+              status: true,
             },
-            time: dateStart.value.toISOString(),
-            status: true,
-          },
-        });
+          }
+        );
         dateStart.value = response.data.data.time;
         clockId.value = response.data.data.id;
       } catch (error) {
@@ -74,7 +77,7 @@
       try {
         dateEnd.value = new Date();
         let response = await axios.get(
-          "http://localhost:4000/api/clocks/" + clockId.value
+          "http://157.230.19.191:4000/api/clocks/" + clockId.value
         );
         let clockData = response.data;
 
@@ -86,7 +89,7 @@
             user_id: clockData.user_id,
           };
 
-          await axios.post("http://localhost:4000/api/workingtimes/", {
+          await axios.post("http://157.230.19.191:4000/api/workingtimes/", {
             working_time: {
               user_id: userId,
               start: dateStart.value,
@@ -94,7 +97,7 @@
             },
           });
 
-          await axios.post("http://localhost:4000/api/clocks", {
+          await axios.post("http://157.230.19.191:4000/api/clocks", {
             clock: {
               user_id: userId,
               user: {
