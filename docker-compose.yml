@@ -2,14 +2,14 @@ version: "3"
 
 services:
   client:
-    image: totomadne/client:latest
+    image: totomadne/time-manager-client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
     ports:
       - "8080:80"
   server:
-    image: totomadne/server:latest
+    image: totomadne/time-manager-server:latest
     build:
       context: ./server
       dockerfile: Dockerfile
