@@ -14,9 +14,9 @@ done
 # Create, migrate, and seed database if it doesn't exist.
 if [[ -z `psql -Atqc "\\list $DBDATABASE" -h $DBHOST -p $DBPORT -U $DBUSER` ]]; then
   echo "Database $DBDATABASE does not exist. Creating..."
-  MIX_ENV=prod mix ecto.create
-  MIX_ENV=prod mix ecto.migrate
-  MIX_ENV=prod mix run priv/repo/seeds.exs
+  mix ecto.create
+  mix ecto.migrate
+  mix run priv/repo/seeds.exs
   echo "Database $DBDATABASE created."
 fi
 
