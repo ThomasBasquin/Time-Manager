@@ -154,14 +154,14 @@ async function editUser() {
             <Button class="mr-2" @click="Register">Create account</Button>
         </CardFooter>
     </Card>
-    <Card v-if="store.count == 2" class="w-1/4 h-2/4">
+    <Card v-if="store.count == 2" class="w-2/4 h-2/4">
         <CardHeader>
             <CardTitle>Logged as {{ store.user.username }}</CardTitle>
             <CardDescription>{{ store.user.email }}</CardDescription>
             <Button @click="store.count = 3">Edit Profile</Button>
         </CardHeader>
         <CardContent>
-            <CardDescription>Vous êtes connecté !</CardDescription>
+            <CardDescription>You are logged !</CardDescription>
         </CardContent>
         <CardFooter class="flex flex-row-reverse">
             <Button @click="logoutUser">Logout</Button>

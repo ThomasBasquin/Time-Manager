@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { store } from '@/store.ts'
 import {
     Card,
@@ -27,6 +27,7 @@ async function getWorkingTimes() {
         workingtimes = response.data
         isLoaded.value = true
         console.log('working time récupéré :', workingtimes)
+        workingtimes = workingtimes.reverse();
     } catch (error) {
         
         console.error('Erreur lors de la récupération de l\'utilisateur :', error)
@@ -51,7 +52,7 @@ async function getClock() {
 
 getClock()
 
-const dateFormat = (dateOrigine: any) => {
+const dateFormat = (dateOrigine) => {
  return moment(dateOrigine).format('D MMMM YYYY, HH:mm:ss');
 } 
 
@@ -89,7 +90,7 @@ const dateFormat = (dateOrigine: any) => {
                     </Card>
                 </li>
             </ul>
-            <Card v-if="clock.status == true" class="m-3">
+            <Card v-if="clock.status === true" class="m-3">
                 <CardContent class="mt-5">
                     <CardTitle>{{dateFormat(clock.start)}}</CardTitle>
                     <CardDescription>Status: En cours</CardDescription>
