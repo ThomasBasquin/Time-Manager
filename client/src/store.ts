@@ -11,5 +11,7 @@ export const store = reactive({
         username: '',
         id: 0
     },
-    working: false
+    working: false,
+    clock: {},
+    workingtimes: []
 })

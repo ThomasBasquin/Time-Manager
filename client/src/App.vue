@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Login from "@/components/Login.vue";
-import Clock from "@/components/Clock.vue";
 import WorkingTime from '@/components/WorkingTime.vue'
 import WorkingTimes from "@/components/WorkingTimes.vue";
+import Chart from "@/components/ChartManager.vue";
 import {
   Tabs,
   TabsContent,
@@ -13,7 +13,7 @@ import {
 
 <template>
   <Tabs default-value="login" class="w-screen">
-    <TabsList class="grid w-full grid-cols-3">
+    <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger value="login">
         Account
       </TabsTrigger>
@@ -22,6 +22,9 @@ import {
       </TabsTrigger>
       <TabsTrigger value="WorkingTime">
         Working Time
+      </TabsTrigger>
+      <TabsTrigger value="Chart">
+        Chart
       </TabsTrigger>
     </TabsList>
     <TabsContent value="login" class="justify-center items-center flex flex-col">
@@ -32,6 +35,9 @@ import {
     </TabsContent>
     <TabsContent value="WorkingTime" class="justify-center items-center flex flex-col">
       <WorkingTime />
+    </TabsContent>
+    <TabsContent value="Chart" class="justify-center items-center flex flex-col">
+      <Chart />
     </TabsContent>
   </Tabs>
 </template>

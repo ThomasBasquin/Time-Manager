@@ -24,12 +24,11 @@ async function getWorkingTimes() {
         const response = await axios.get(request, {})
 
         // Traiter la réponse de l'API
-        workingtimes = response.data
+        store.workingtimes = response.data
         isLoaded.value = true
-        console.log('working time récupéré :', workingtimes)
-        workingtimes = workingtimes.reverse();
+        console.log('working time récupéré :', store.workingtimes)
+        store.workingtimes = store.workingtimes.reverse();
     } catch (error) {
-        
         console.error('Erreur lors de la récupération de l\'utilisateur :', error)
     }
 }
@@ -43,8 +42,8 @@ async function getClock() {
         const response = await axios.get(request, {})
 
         // Traiter la réponse de l'API
-        clock = response.data
-        console.log("la clock est: " + clock.status)
+        store.clock = response.data
+        console.log("la clock est: " + store.clock.status)
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur :', error)
     }
@@ -80,8 +79,14 @@ const dateFormat = (dateOrigine) => {
             </CardFooter>
         </Card>
         <Card v-if="isLoaded === true" class="w-3/4">
+          <Card v-if="store.clock.status === true" class="m-3">
+            <CardContent class="mt-5">
+              <CardTitle>{{dateFormat(store.clock.start)}}</CardTitle>
+              <CardDescription>Status: En cours</CardDescription>
+            </CardContent>
+          </Card>
             <ul id="demo">
-                <li v-for="wtime in workingtimes" class="item-{{$index}}">
+                <li v-for="wtime in store.workingtimes" class="item-{{$index}}">
                     <Card class="m-3">
                         <CardContent class="mt-5">
                             <CardTitle>{{dateFormat(wtime.start)}} - {{dateFormat(wtime.end)}}</CardTitle>
@@ -90,12 +95,7 @@ const dateFormat = (dateOrigine) => {
                     </Card>
                 </li>
             </ul>
-            <Card v-if="clock.status === true" class="m-3">
-                <CardContent class="mt-5">
-                    <CardTitle>{{dateFormat(clock.start)}}</CardTitle>
-                    <CardDescription>Status: En cours</CardDescription>
-                </CardContent>
-            </Card>
+
         </Card>
     </Card>
 </template>

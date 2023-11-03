@@ -13,6 +13,21 @@ const dateFormat = (dateOrigine) => {
   return moment(dateOrigine).format('D MMMM YYYY, HH:mm:ss');
 }
 
+async function getWorkingTimes() {
+  try {
+    // Effectuer la requête GET pour récupérer les temps de travail
+    const request = "http://localhost:4000/api/workingtimes/" + store.user.id
+    const response = await axios.get(request, {})
+
+    // Traiter la réponse de l'API
+    store.workingtimes = response.data
+    console.log('working time récupéré :', store.workingtimes)
+    store.workingtimes = store.workingtimes.reverse();
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'utilisateur :', error)
+  }
+}
+
 async function getClock() {
   try {
     // Effectuer la requête GET pour récupérer la clock
@@ -25,6 +40,7 @@ async function getClock() {
     clockId.value = response.data.id;
     clock = response.data
     store.working = clock.status === true;
+    store.clock = clock;
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'utilisateur :', error)
   }
@@ -74,8 +90,8 @@ async function toggleWorkStatus() {
         clock: {
           user_id: userId,
           user: {
-            username: userName.value,
-            email: userEmail.value,
+            username: userName,
+            email: userEmail,
           },
           time: dateStart.value.toISOString(),
           status: true,
@@ -83,6 +99,8 @@ async function toggleWorkStatus() {
       });
       dateStart.value = response.data.time;
       clockId.value = response.data.id;
+      await getClock();
+      await getWorkingTimes();
     } catch (error) {
       console.log(error);
     }
@@ -124,6 +142,8 @@ async function toggleWorkStatus() {
             status: false,
           },
         });
+        await getClock();
+        await getWorkingTimes();
       }
     } catch (error) {
       console.log(error);
