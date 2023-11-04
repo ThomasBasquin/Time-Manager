@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build_and_push:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +23,12 @@ jobs:
         run: |
           docker-compose build
           docker-compose push
+
+      - name: Deploy to Docker Swarm
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "docker stack deploy -c ~/time-manager/docker-compose.yml time-manager"
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USERNAME: ${{ secrets.VPS_USERNAME }}

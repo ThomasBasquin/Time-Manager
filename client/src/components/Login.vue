@@ -143,7 +143,7 @@
     <CardHeader>
       <CardTitle>Login to your account</CardTitle>
       <CardDescription
-        >Enter your mail to login to your account
+        >Enter your mail to login to your account.
       </CardDescription>
     </CardHeader>
     <CardContent>
