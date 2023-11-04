@@ -67,7 +67,6 @@
       const user = response.data;
       console.log("Utilisateur créé :", user);
       store.user = user.data;
-      console.log(store.user);
       store.count = 2;
       store.email = "";
       store.username = "";
@@ -190,14 +189,14 @@
   </Card>
   <Card
     v-if="store.count == 2"
-    class="w-1/4 h-2/4">
+    class="w-2/4 h-2/4">
     <CardHeader>
       <CardTitle>Logged as {{ store.user.username }}</CardTitle>
       <CardDescription>{{ store.user.email }}</CardDescription>
       <Button @click="store.count = 3">Edit Profile</Button>
     </CardHeader>
     <CardContent>
-      <CardDescription>Vous êtes connecté !</CardDescription>
+      <CardDescription>You are logged !</CardDescription>
     </CardContent>
     <CardFooter class="flex flex-row-reverse">
       <Button @click="logoutUser">Logout</Button>

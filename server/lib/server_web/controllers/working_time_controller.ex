@@ -15,8 +15,8 @@ defmodule ServerWeb.WorkingTimeController do
     response(code(:ok), "Success")
   end
 
-  def index(conn, _params) do
-    working_times = Account.list_working_times()
+  def index(conn, params) do
+    working_times = Account.list_working_times(params)
     working_times_with_users = Server.Repo.preload(working_times, :user)
 
     # Transformez la liste des WorkingTime en une liste de réponses JSON
@@ -57,35 +57,35 @@ defmodule ServerWeb.WorkingTimeController do
     end
   end
 
-  swagger_path :show do
-    get("/api/working_times/{id}")
-    description("Show a working_time")
-    parameter(:path, :string, :id, "WorkingTime id", required: true)
-    response(code(:ok), "Success")
-  end
 
-  def show(conn, %{"id" => id}) do
-    working_time = Account.get_working_time!(id)
-    # Charger l'utilisateur associé en utilisant le préchargement
-    working_time_with_user = Server.Repo.preload(working_time, :user)
+  def show(conn, params) do
+    # Retrieve a list of working times for the given user and ID
+    working_times = Account.list_working_times(params)  # Replace with your data retrieval logic
+    working_times_with_users = Server.Repo.preload(working_times, :user)
 
-    # Construire la réponse JSON
-    response = %{
-      "id" => working_time_with_user.id,
-      "start" => working_time_with_user.start,
-      "end" => working_time_with_user.end,
-      "user_id" => working_time_with_user.user_id,
-      "user" => %{
-        "id" => working_time_with_user.user.id,
-        "username" => working_time_with_user.user.username,
-        "email" => working_time_with_user.user.email
-      }
-    }
+    # Transformez la liste des WorkingTime en une liste de réponses JSON
+    response_list =
+      Enum.map(working_times_with_users, fn working_time ->
+        %{
+          "id" => working_time.id,
+          "start" => working_time.start,
+          "end" => working_time.end,
+          "user_id" => working_time.user_id,
+          "user" => %{
+            "id" => working_time.user.id,
+            "username" => working_time.user.username,
+            "email" => working_time.user.email
+          }
+        }
+      end)
 
     # Renvoyez la liste de réponses JSON
     conn
     |> put_status(:ok)
-    |> json(response)
+    |> json(response_list)
+
+    # Respond with the list of working times
+    #render(conn, :index, working_times: working_times)
   end
 
   swagger_path :update do

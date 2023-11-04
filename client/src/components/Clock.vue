@@ -1,26 +1,61 @@
 <script setup>
   import axios from "axios";
   import { store } from "@/store";
-
   import { Button } from "@/components/ui/button";
   import { ref } from "vue";
+  import moment from "moment";
 
-  const working = ref(false);
-  const elapsedTime = ref("");
-  let interval;
+  let clock = ref([]);
   let dateStart = ref(new Date());
+  let clockId = ref(0);
+
+  const dateFormat = (dateOrigine) => {
+    return moment(dateOrigine).format("D MMMM YYYY, HH:mm:ss");
+  };
+
+  async function getWorkingTimes() {
+    try {
+      // Effectuer la requête GET pour récupérer les temps de travail
+      const request = "http://localhost:4000/api/workingtimes/" + store.user.id;
+      const response = await axios.get(request, {});
+
+      // Traiter la réponse de l'API
+      store.workingtimes = response.data;
+      console.log("working time récupéré :", store.workingtimes);
+      store.workingtimes = store.workingtimes.reverse();
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    }
+  }
+
+  async function getClock() {
+    try {
+      // Effectuer la requête GET pour récupérer la clock
+      const request = "http://localhost:4000/api/clocks/" + store.user.id;
+      const response = await axios.get(request, {});
+
+      // Traiter la réponse de l'API
+      dateStart.value = response.data.time;
+      console.log("la clock est: " + dateStart.value);
+      clockId.value = response.data.id;
+      clock = response.data;
+      store.working = clock.status === true;
+      store.clock = clock;
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    }
+  }
+
+  getClock();
+
+  const elapsedTime = ref("");
   let dateEnd = ref(new Date());
+  let interval;
   let userId = store.user.id;
   let userEmail = store.user.email;
   let userName = store.user.username;
-  let clockId = ref(0);
 
   function calculateElapsedTime() {
-    if (!dateStart.value) {
-      console.log("dateStart.value n'est pas défini");
-      return "00:00:00";
-    }
-
     const now = new Date();
     const elapsed = now - new Date(dateStart.value);
 
@@ -44,29 +79,31 @@
   }
 
   async function toggleWorkStatus() {
-    working.value = !working.value;
-    if (working.value) {
+    store.working = !store.working;
+    if (store.working) {
       dateStart.value = new Date();
       calculateElapsedTime();
 
       interval = setInterval(calculateElapsedTime, 1000);
       try {
-        let response = await axios.post(
-          "http://157.230.19.191:4000/api/clocks",
+        let response = await axios.put(
+          "http://157.230.19.191:4000/api/clocks/" + store.user.id,
           {
             clock: {
               user_id: userId,
               user: {
-                username: userName.value,
-                email: userEmail.value,
+                username: userName,
+                email: userEmail,
               },
               time: dateStart.value.toISOString(),
               status: true,
             },
           }
         );
-        dateStart.value = response.data.data.time;
-        clockId.value = response.data.data.id;
+        dateStart.value = response.data.time;
+        clockId.value = response.data.id;
+        await getClock();
+        await getWorkingTimes();
       } catch (error) {
         console.log(error);
       }
@@ -77,7 +114,7 @@
       try {
         dateEnd.value = new Date();
         let response = await axios.get(
-          "http://157.230.19.191:4000/api/clocks/" + clockId.value
+          "http://157.230.19.191:4000/api/clocks/" + store.user.id
         );
         let clockData = response.data;
 
@@ -96,18 +133,30 @@
               end: dateEnd.value,
             },
           });
-
-          await axios.post("http://157.230.19.191:4000/api/clocks", {
-            clock: {
+          await axios.post("http://157.230.19.191:4000/api/workingtimes/", {
+            working_time: {
               user_id: userId,
-              user: {
-                username: userName.value,
-                email: userEmail.value,
-              },
-              time: dateEnd.value.toISOString(),
-              status: false,
+              start: dateStart.value,
+              end: dateEnd.value,
             },
           });
+
+          await axios.put(
+            "http://157.230.19.191:4000/api/clocks/" + +store.user.id,
+            {
+              clock: {
+                user_id: userId,
+                user: {
+                  username: userName.value,
+                  email: userEmail.value,
+                },
+                time: dateEnd.value.toISOString(),
+                status: false,
+              },
+            }
+          );
+          await getClock();
+          await getWorkingTimes();
         }
       } catch (error) {
         console.log(error);
@@ -118,30 +167,19 @@
 
 <template>
   <div
-    v-if="!store.user.id"
-    class="flex items-center mt-10 justify-center">
-    <div class="text-center p-6 bg-white rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold text-red-600 mb-3">Connectez-vous</h2>
-      <p class="text-gray-700">
-        Merci de vous connecter pour enregistrer votre temps de travail
-      </p>
-    </div>
-  </div>
-
-  <div
     v-if="store.user.id"
-    class="flex justify-center mt-4">
+    class="flex flex-col items-center mt-4">
     <button
       @click="toggleWorkStatus"
       :class="{
-        'bg-green-500 hover:bg-green-700': !working,
-        'bg-red-500 hover:bg-red-700': working,
+        'bg-green-500 hover:bg-green-700': !store.working,
+        'bg-red-500 hover:bg-red-700': store.working,
       }"
       class="text-white font-bold py-2 px-4 rounded transition duration-300">
-      {{ working ? "Terminer le travail" : "Commencer le travail" }}
+      {{ store.working ? "Terminer le travail" : "Commencer le travail" }}
     </button>
     <div
-      v-if="store.user.id && working"
+      v-if="store.user.id && store.working"
       class="flex flex-col mt-4 items-center">
       <p class="text-gray-700 mt-2">
         Début du travail : {{ new Date(dateStart).toLocaleTimeString() }}
