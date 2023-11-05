@@ -21,7 +21,7 @@ export default {
   methods: {
     async getDataFromAPI() {
       try {
-        const response = await axios.get('http://157.230.19.19:4000/api/workingtimes/' + store.user.id);
+        const response = await axios.get('http://157.230.19.191:4000/api/workingtimes/' + store.user.id);
         console.log(response.data);
         this.chartData = response.data; // Assurez-vous que votre API renvoie les données dans un format adapté au graphique (voir la documentation de Chart.js)
         this.calculateWorkHours();
