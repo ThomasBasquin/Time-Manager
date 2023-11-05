@@ -1,5 +1,5 @@
 #!/bin/bash
-# Docker entrypoint script.
+# Docker entrypoint script
 
 export PGPASSWORD=${DBPASSWORD}
 
