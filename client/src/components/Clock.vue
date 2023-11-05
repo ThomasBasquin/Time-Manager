@@ -136,7 +136,7 @@
           });
 
           await axios.put(
-            "http://157.230.19.191:4000/api/clocks/" + +store.user.id,
+            "http://157.230.19.191:4000/api/clocks/" + store.user.id,
             {
               clock: {
                 user_id: userId,
