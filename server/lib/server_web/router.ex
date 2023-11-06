@@ -29,8 +29,9 @@ defmodule ServerWeb.Router do
 
     # clocks routes
 
-    post("/clocks/:id", ClockController, :create)
+    post("/clocks", ClockController, :create)
     put("clocks/:id", ClockController, :update)
+    get("/clocks/", ClockController, :index)
 
     get("/clocks/:id", ClockController, :show)
   end
