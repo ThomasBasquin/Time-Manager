@@ -16,7 +16,7 @@ const dateFormat = (dateOrigine) => {
 async function getWorkingTimes() {
   try {
     // Effectuer la requête GET pour récupérer les temps de travail
-    const request = "http://localhost:4000/api/workingtimes/" + store.user.id
+    const request = "http://157.230.19.191:4000/api/workingtimes/" + store.user.id
     const response = await axios.get(request, {})
 
     // Traiter la réponse de l'API
