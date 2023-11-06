@@ -10,6 +10,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "auto",
       includeAssets: ["favicon.svg", "robots.txt", "apple-touch-icon.png"],
+      workbox: {
+        cleanupOutdatedCaches: true,
+      },
       manifest: {
         name: "Time manager",
         short_name: "TM",
