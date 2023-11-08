@@ -65,4 +65,18 @@ defmodule Server.AccountFixtures do
 
     clock
   end
+
+  @doc """
+  Generate a team.
+  """
+  def team_fixture(attrs \\ %{}) do
+    {:ok, team} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Server.Account.create_team()
+
+    team
+  end
 end
