@@ -30,10 +30,18 @@ defmodule ServerWeb.Router do
     # clocks routes
 
     post("/clocks", ClockController, :create)
-    put("clocks/:id", ClockController, :update)
+    put("/clocks/:id", ClockController, :update)
     get("/clocks/", ClockController, :index)
 
     get("/clocks/:id", ClockController, :show)
+
+    # teams routes
+    post("/teams", TeamController, :create)
+    put("/teams/:id", TeamController, :update)
+    delete("/teams/:id", TeamController, :delete)
+    get("/teams", TeamController, :index)
+
+    get("/teams/:id", TeamController, :index)
   end
 
   scope "/api/swagger" do
@@ -49,6 +57,7 @@ defmodule ServerWeb.Router do
         version: "1.0",
         title: "My App"
       }
+
     }
   end
 
