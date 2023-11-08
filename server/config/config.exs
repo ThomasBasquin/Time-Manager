@@ -50,6 +50,8 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :joken, default_signer: "secret"
+
 config :server, ServerWeb.Endpoint,
        secret_key_base: "QSDfrtgyhuJIKlm"
 
