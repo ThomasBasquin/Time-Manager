@@ -183,7 +183,7 @@
 <template>
   <Card
     v-if="store.count == 0"
-    class="w-1/4 h-2/4">
+    class="w-3/4 md:w-2/4 h-2/4">
     <CardHeader>
       <CardTitle>Login to your account</CardTitle>
       <CardDescription
@@ -211,7 +211,7 @@
   </Card>
   <Card
     v-if="store.count == 1"
-    class="w-1/4 h-2/4">
+    class="w-3/4 md:w-2/4 h-2/4">
     <CardHeader>
       <CardTitle>Create a account</CardTitle>
       <CardDescription
@@ -242,7 +242,7 @@
   </Card>
   <Card
     v-if="store.count == 2"
-    class="w-2/4 h-2/4">
+    class="w-3/4 md:w-2/4 h-2/4">
     <CardHeader>
       <CardTitle>Logged as {{ store.user.username }}</CardTitle>
       <CardDescription>{{ store.user.email }}</CardDescription>
@@ -262,7 +262,7 @@
   </Card>
   <Card
     v-if="store.count == 3"
-    class="w-2/4 h-2/4">
+    class="w-3/4 md:w-2/4 h-2/4">
     <CardHeader>
       <CardTitle>Logged as {{ store.user.username }}</CardTitle>
       <CardDescription>{{ store.user.email }}</CardDescription>
