@@ -76,8 +76,8 @@
   </div>
   <Card
     v-if="store.user.id"
-    class="flex w-11/12">
-    <Card class="w-1/4">
+    class="flex flex-col md:flex-row w-11/12">
+    <Card class="w-full md:w-1/4">
       <CardHeader class="">
         <CardTitle>Clock In/Out</CardTitle>
         <CardDescription></CardDescription>
@@ -89,7 +89,7 @@
     </Card>
     <Card
       v-if="isLoaded === true"
-      class="w-3/4">
+      class="w-full md:w-3/4">
       <Card
         v-if="store.clock.status === true"
         class="m-3">
