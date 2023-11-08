@@ -1,17 +1,18 @@
 // store.js
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
 export const store = reactive({
-    count: 0,
-    email: '',
-    username: '',
-    isLogged: false,
-    user: {
-        email: '',
-        username: '',
-        id: 0
-    },
-    working: false,
-    clock: {},
-    workingtimes: []
-})
+  count: 0,
+  email: "",
+  username: "",
+  password: "",
+  isLogged: false,
+  user: {
+    email: "",
+    username: "",
+    id: 0,
+  },
+  working: false,
+  clock: {},
+  workingtimes: [],
+});
