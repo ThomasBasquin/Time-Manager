@@ -16,6 +16,36 @@ defmodule ServerWeb.UserController do
     response(code(:ok), "Success")
   end
 
+  def login(conn, %{"email" => email, "password" => password}) do
+    # Recherchez l'utilisateur par e-mail
+    user = Account.get_user_by_email!(email)
+
+    case user do
+      nil ->
+        # L'utilisateur n'existe pas
+        conn
+        |> put_status(404)
+        |> json(%{error: "Utilisateur non trouvé"})
+
+      %User{password: password_hash, id: user_id, role: user_role} ->
+        # Vérifiez le mot de passe en utilisant Pbkdf2.verify_pass
+        if Pbkdf2.verify_pass(password, password_hash) do
+          xsrf_token = :crypto.strong_rand_bytes(32) |> Base.encode64()
+          jwt = ServerWeb.JWTManager.create_token(user_id, user_role, xsrf_token)
+          response = %{message: "Connexion réussie", xsrf_token: xsrf_token}
+          # Mot de passe correct, vous pouvez effectuer une action de connexion ici
+          conn
+          |> put_status(200)
+          |> Plug.Conn.put_resp_cookie("jwt", jwt, http_only: true, secure: true)
+          |> json(response)
+        else
+          conn
+          |> put_status(401)
+          |> json(%{error: "Mot de passe incorrect"})
+        end
+    end
+  end
+
   def index(conn, _params) do
     users = Account.list_users(_params)
     render(conn, :index, users: users)

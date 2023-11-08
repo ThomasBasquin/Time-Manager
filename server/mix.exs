@@ -49,7 +49,10 @@ defmodule Server.MixProject do
       {:phoenix_swagger, "~> 0.8"},
       {:ex_json_schema, "~> 0.5"},
       {:poison, "~> 3.0"},
-      {:cors_plug, "~> 3.0"}
+      {:cors_plug, "~> 3.0"},
+      {:comeonin, "~> 5.4"},
+      {:pbkdf2_elixir, "~> 2.0"},
+      {:joken, "~> 2.2"}
     ]
   end
 

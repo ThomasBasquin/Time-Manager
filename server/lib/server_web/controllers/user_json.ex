@@ -19,7 +19,10 @@ defmodule ServerWeb.UserJSON do
     %{
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
+      password: user.password,
+      role: user.role,
+      teams: user.teams
     }
   end
 end

@@ -1,5 +1,4 @@
 defmodule ServerWeb.Router do
-  alias Erl2exVendored.Results.Collector
   use ServerWeb, :router
 
   pipeline :api do
@@ -16,6 +15,7 @@ defmodule ServerWeb.Router do
 
     get("/users/:id", UserController, :index)
     get("/users", UserController, :index)
+    post("/login", UserController, :login)
 
     # workingTime routes
 

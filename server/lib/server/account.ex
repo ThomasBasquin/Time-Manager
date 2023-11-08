@@ -4,6 +4,8 @@ defmodule Server.Account do
   """
 
   import Ecto.Query, warn: false
+  import Comeonin
+
   alias Server.Repo
 
   alias Server.Account.User
@@ -23,13 +25,6 @@ defmodule Server.Account do
     query =
       if email = params["email"] do
         from(u in query, where: u.email == ^email)
-      else
-        query
-      end
-
-    query =
-      if username = params["username"] do
-        from(u in query, where: u.username == ^username)
       else
         query
       end
@@ -67,10 +62,17 @@ defmodule Server.Account do
       {:error, %Ecto.Changeset{}}
 
   """
+
   def create_user(attrs \\ %{}) do
+    modified_user_params = Map.update!(attrs, "password", &modify_password/1)
     %User{}
-    |> User.changeset(attrs)
+    |> User.changeset(modified_user_params)
     |> Repo.insert()
+  end
+
+  defp modify_password(password) do
+    hashed_password = Pbkdf2.hash_pwd_salt(password)
+    hashed_password
   end
 
   @doc """
@@ -254,7 +256,7 @@ defmodule Server.Account do
   end
 
   @doc """
-  Gets a single clock.
+  Gets a single clock by user id.
 
   Raises `Ecto.NoResultsError` if the Clock does not exist.
 

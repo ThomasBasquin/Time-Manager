@@ -5,6 +5,9 @@ defmodule Server.Account.User do
   schema "users" do
     field :username, :string
     field :email, :string
+    field :password, :string
+    field :role, :string
+    field :teams, {:array, :integer}
 
     timestamps(type: :utc_datetime)
   end
@@ -12,8 +15,8 @@ defmodule Server.Account.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :username])
-    |> validate_required([:email, :username])
+    |> cast(attrs, [:email, :username, :password, :role, :teams])
+    |> validate_required([:email, :username, :password, :role, :teams])
     # Ajout de la contrainte d'unicité sur "username"
     |> unique_constraint(:username)
     # Ajout de la contrainte d'unicité sur "email"

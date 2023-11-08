@@ -5,6 +5,9 @@ defmodule Server.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :email, :string
       add :username, :string
+      add :password, :string
+      add :role, :string
+      add :teams, {:array, :integer}
 
       timestamps(type: :utc_datetime)
     end

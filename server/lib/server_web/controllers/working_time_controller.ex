@@ -59,42 +59,58 @@ defmodule ServerWeb.WorkingTimeController do
 
 
   def show(conn, params) do
-    # Retrieve a list of working times for the given user and ID
-    working_times = Account.list_working_times(params)  # Replace with your data retrieval logic
-    working_times_with_users = Server.Repo.preload(working_times, :user)
+    token = ""
+    jwt = ""
+    IO.inspect(get_req_header(conn, "authorization"))
+    if get_req_header(conn, "authorization") != [] do
+      token = Enum.at(String.split(hd(get_req_header(conn, "authorization")), " "), 1)
+    end
+    if get_req_header(conn, "cookie") != [] do
+      jwt = Enum.at(String.split(hd(get_req_header(conn, "cookie")), "="), 1)
+    end
 
-    # Transformez la liste des WorkingTime en une liste de réponses JSON
-    response_list =
-      Enum.map(working_times_with_users, fn working_time ->
-        %{
-          "id" => working_time.id,
-          "start" => working_time.start,
-          "end" => working_time.end,
-          "user_id" => working_time.user_id,
-          "user" => %{
-            "id" => working_time.user.id,
-            "username" => working_time.user.username,
-            "email" => working_time.user.email
+    IO.inspect(jwt)
+    IO.inspect(token)
+
+    decrypt = ServerWeb.JWTManager.verify_token(jwt)
+    xsrf_token = ""
+
+    IO.inspect(decrypt)
+    if decrypt != {:error, "Invalid token"} do
+      xsrf_token = Map.get(decrypt, "xsrf_token")
+    end
+
+    if xsrf_token == token do
+      working_times = Account.list_working_times(params)
+      working_times_with_users = Server.Repo.preload(working_times, :user)
+      response_list =
+        Enum.map(working_times_with_users, fn working_time ->
+          %{
+            "id" => working_time.id,
+            "start" => working_time.start,
+            "end" => working_time.end,
+            "user_id" => working_time.user_id,
+            "user" => %{
+              "id" => working_time.user.id,
+              "username" => working_time.user.username,
+              "email" => working_time.user.email
+            }
           }
-        }
-      end)
+        end)
+      conn
+      |> put_status(:ok)
+      |> json(response_list)
+    else
+      conn
+      |> put_status(:unauthorized)
+      |> json(%{"error" => "Unauthorized"})
+    end
 
-    # Renvoyez la liste de réponses JSON
-    conn
-    |> put_status(:ok)
-    |> json(response_list)
-
-    # Respond with the list of working times
-    #render(conn, :index, working_times: working_times)
+    IO.inspect(xsrf_token)
   end
 
-  swagger_path :update do
-    put("/api/working_times/{id}")
-    description("Update a working_time")
-    parameter(:path, :string, :id, "WorkingTime id", required: true)
-    parameter(:body, :working_time, :body, "WorkingTime to update", required: true)
-    response(code(:ok), "Success")
-  end
+
+
 
   def update(conn, %{"id" => id, "working_time" => working_time_params}) do
     working_time = Account.get_working_time!(id)
