@@ -21,7 +21,8 @@
     try {
       // Effectuer la requête GET pour récupérer les temps de travail
       const request =
-        "https://157.230.19.191:4000/api/workingtimes/" + store.user.id;
+        "https://api-time-manager.thomasbasquin.fr/api/workingtimes/" +
+        store.user.id;
       const response = await axios.get(request, {});
 
       // Traiter la réponse de l'API
@@ -39,7 +40,7 @@
   async function getClock() {
     try {
       // Effectuer la requête GET pour récupérer la clock
-      const request = "https://157.230.19.191:4000/api/clocks/";
+      const request = "https://api-time-manager.thomasbasquin.fr/api/clocks/";
       const response = await axios.get(request, {});
 
       // Parse the JSON response to find the clock of the user

@@ -17,8 +17,13 @@
     try {
       // Effectuer la requête GET pour récupérer les temps de travail
       const request =
-        "https://157.230.19.191:4000/api/workingtimes/" + store.user.id;
-      const response = await axios.get(request, {});
+        "https://api-time-manager.thomasbasquin.fr/api/workingtimes/" +
+        store.user.id;
+      const response = await axios.get(request, {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("xsrf_token"),
+        },
+      });
 
       // Traiter la réponse de l'API
       store.workingtimes = response.data;
@@ -32,7 +37,7 @@
   async function getClock() {
     try {
       // Effectuer la requête GET pour récupérer la clock
-      const request = "https://157.230.19.191:4000/api/clocks/";
+      const request = "https://api-time-manager.thomasbasquin.fr/api/clocks/";
       const response = await axios.get(request, {});
 
       // Parse the JSON response to find the clock of the user
@@ -93,7 +98,8 @@
       interval = setInterval(calculateElapsedTime, 1000);
       try {
         let response = await axios.put(
-          "https://157.230.19.191:4000/api/clocks/" + store.clock.id,
+          "https://api-time-manager.thomasbasquin.fr/api/clocks/" +
+            store.clock.id,
           {
             clock: {
               user_id: userId,
@@ -120,7 +126,8 @@
       try {
         dateEnd.value = new Date();
         let response = await axios.get(
-          "https://157.230.19.191:4000/api/clocks/" + clockId.value
+          "https://api-time-manager.thomasbasquin.fr/api/clocks/" +
+            clockId.value
         );
         let clockData = response.data;
 
@@ -132,16 +139,20 @@
             user_id: clockData.user_id,
           };
 
-          await axios.post("https://157.230.19.191:4000/api/workingtimes/", {
-            working_time: {
-              user_id: userId,
-              start: dateStart.value,
-              end: dateEnd.value,
-            },
-          });
+          await axios.post(
+            "https://api-time-manager.thomasbasquin.fr/api/workingtimes/",
+            {
+              working_time: {
+                user_id: userId,
+                start: dateStart.value,
+                end: dateEnd.value,
+              },
+            }
+          );
 
           await axios.put(
-            "https://157.230.19.191:4000/api/clocks/" + store.clock.id,
+            "https://api-time-manager.thomasbasquin.fr/api/clocks/" +
+              store.clock.id,
             {
               clock: {
                 user_id: userId,

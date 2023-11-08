@@ -21,7 +21,7 @@
     try {
       // Effectuer la requête GET pour récupérer l'utilisateur
       const response = await axios.get(
-        "https://157.230.19.191:4000/api/users/",
+        "https://api-time-manager.thomasbasquin.fr/api/users/",
         {
           params: {
             email: store.email,
@@ -46,6 +46,20 @@
     } catch (error) {
       console.error("Erreur lors de la récupération de l'utilisateur :", error);
     }
+
+    try {
+      const response = await axios.post(
+        "https://api-time-manager.thomasbasquin.fr/api/login/",
+        {
+          email: store.user.email,
+          password: store.password,
+        }
+      );
+      console.log(response.data);
+      localStorage.setItem("xsrf_token", response.data.xsrf_token);
+    } catch (error) {
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    }
   }
 
   async function goRegister() {
@@ -56,11 +70,14 @@
     try {
       // Effectuer la requête POST pour créer l'utilisateur
       const response = await axios.post(
-        "https://157.230.19.191:4000/api/users/",
+        "https://api-time-manager.thomasbasquin.fr/api/users/",
         {
           user: {
             email: store.email,
             username: store.username,
+            password: store.password,
+            role: "none",
+            teams: [],
           },
         }
       );
@@ -71,13 +88,14 @@
       store.count = 2;
       store.email = "";
       store.username = "";
+      store.password = "";
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur :", error);
     }
     try {
       // Effectuer la requête POST pour créer la clock
       const response = await axios.post(
-        "https://157.230.19.191:4000/api/clocks/",
+        "https://api-time-manager.thomasbasquin.fr/api/clocks/",
         {
           clock: {
             status: false,
@@ -86,6 +104,7 @@
             user: {
               email: store.email,
               username: store.username,
+              password: store.password,
             },
           },
         }
@@ -103,7 +122,7 @@
     try {
       // Effectuer la requête DELETE pour supprimer l'utilisateur
       const response = await axios.delete(
-        "https://157.230.19.191:4000/api/users/" + store.user.id
+        "https://api-time-manager.thomasbasquin.fr/api/users/" + store.user.id
       );
       // Traiter la réponse de l'API
       const user = response.data;
@@ -131,14 +150,16 @@
     };
     store.email = "";
     store.username = "";
+    store.password = "";
     localStorage.removeItem("user");
+    localStorage.removeItem("xsrf_token");
   }
 
   async function editUser() {
     try {
       // Effectuer la requête PUT pour modifier l'utilisateur
       const response = await axios.put(
-        "https://157.230.19.191:4000/api/users/" + store.user.id,
+        "https://api-time-manager.thomasbasquin.fr/api/users/" + store.user.id,
         {
           user: {
             email: store.email,
@@ -169,11 +190,15 @@
         >Enter your mail to login to your account.
       </CardDescription>
     </CardHeader>
-    <CardContent>
+    <CardContent class="space-y-2">
       <Input
         v-model="store.email"
         type="email"
         placeholder="Email" />
+      <Input
+        v-model="store.password"
+        type="password"
+        placeholder="Password" />
     </CardContent>
     <CardFooter class="flex flex-row-reverse">
       <Button @click="Login">Login</Button>
@@ -202,6 +227,10 @@
         v-model="store.email"
         type="email"
         placeholder="Email" />
+      <Input
+        v-model="store.password"
+        type="password"
+        placeholder="Password" />
     </CardContent>
     <CardFooter class="flex flex-row-reverse">
       <Button

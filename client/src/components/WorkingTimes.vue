@@ -10,7 +10,10 @@
   getWorkingTimes();
   async function getWorkingTimes() {
     axios
-      .get("https://157.230.19.191:4000/api/workingtimes/" + store.user.id)
+      .get(
+        "https://api-time-manager.thomasbasquin.fr/api/workingtimes/" +
+          store.user.id
+      )
       .then(function (response) {
         // Gérer la réponse ici
         const data = response.data;
