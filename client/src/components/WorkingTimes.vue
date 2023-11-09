@@ -17,9 +17,6 @@ async function getWorkingTimes() {
           , {
             withCredentials: true,
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
               'authorization': 'Bearer ' + localStorage.getItem('xsrf_token'),
             },
           })
