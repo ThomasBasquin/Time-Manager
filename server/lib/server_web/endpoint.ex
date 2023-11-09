@@ -48,9 +48,6 @@ defmodule ServerWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
-  plug CORSPlug, origins: "*",
-                 allowed_methods: ~w(GET POST PUT DELETE OPTIONS),
-                 allowed_headers: ~w(content-type authorization),
-                 allow_credentials: true  # Si vous utilisez des informations d'identification (true ou false)
+  plug(CORSPlug, origin: "*")
   plug(ServerWeb.Router)
 end
