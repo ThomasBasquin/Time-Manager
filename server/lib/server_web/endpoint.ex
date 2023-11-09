@@ -48,6 +48,6 @@ defmodule ServerWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
-  plug(CORSPlug, origin: "*")
+  plug(CORSPlug, origin: "*", allow_headers: ["authorization", "content-type", "accept"], allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], max_age: 600, allow_credentials: true)
   plug(ServerWeb.Router)
 end
