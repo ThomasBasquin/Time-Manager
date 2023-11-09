@@ -49,7 +49,7 @@ defmodule ServerWeb.Endpoint do
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
   plug CORSPlug, origins: "http://localhost:5173",
-                 allowed_methods: ~w(GET POST PUT DELETE),
+                 allowed_methods: ~w(GET POST PUT DELETE OPTIONS),
                  allowed_headers: ~w(content-type authorization),
                  allow_credentials: true  # Si vous utilisez des informations d'identification (true ou false)
   plug(Plug.CSRFProtection, csrf_token: true)
