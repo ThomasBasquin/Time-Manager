@@ -15,7 +15,6 @@ async function getWorkingTimes() {
           "https://api-time-manager.thomasbasquin.fr/api/workingtimes/" +
           store.user.id
           , {
-            withCredentials: true,
             headers: {
               'authorization': 'Bearer ' + localStorage.getItem('xsrf_token'),
             },
