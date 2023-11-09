@@ -36,7 +36,7 @@ import {
     <TabsContent value="WorkingTime" class="justify-center items-center flex flex-col">
       <WorkingTime />
     </TabsContent>
-    <TabsContent value="Chart" class="justify-center items-center flex flex-col">
+    <TabsContent value="Chart" class="justify-center items-center flex flex-col h-full w-full">
       <Chart />
     </TabsContent>
   </Tabs>
