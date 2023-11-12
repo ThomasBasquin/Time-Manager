@@ -16,7 +16,8 @@ let user_teams = [];
 async function getTodayWorkingTimes() {
     let todayWorkingTimes = [];
     console.log(store.team_workingtimes);
-    store.team_workingtimes.forEach((workingTime) => {
+    let team_workingtimes = Array.from(store.team_workingtimes);
+    team_workingtimes.forEach((workingTime) => {
         if (workingTime.start.includes(new Date().toISOString().slice(0, 10))) {
             todayWorkingTimes.push(workingTime);
         }

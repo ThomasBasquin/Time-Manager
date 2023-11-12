@@ -16,4 +16,5 @@ export const store = reactive({
   working: false,
   clock: {},
   workingtimes: [],
+  team_workingtimes: [],
 });
