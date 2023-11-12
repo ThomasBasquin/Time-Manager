@@ -67,7 +67,6 @@ async function getWorkingTimes() {
     FilteredWorkingTimes.sort((a, b) => {
         return new Date(b.start) - new Date(a.start);
     });
-    
     return FilteredWorkingTimes;
 }
 
@@ -116,10 +115,6 @@ async function addUser() {
     );
     console.log(response2.data);
 }
-
-setInterval(() => {
-    forceRender();
-}, 1000);
 
 await getTeam();
 </script>
