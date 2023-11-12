@@ -11,6 +11,7 @@ export const store = reactive({
     email: "",
     username: "",
     id: 0,
+    role: "none",
   },
   working: false,
   clock: {},

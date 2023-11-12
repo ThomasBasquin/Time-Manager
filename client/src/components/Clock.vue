@@ -46,12 +46,16 @@
           store.clock = response.data[i];
         }
       }
-
+      console.log(store.clock)
       // Traiter la réponse de l'API
       dateStart.value = store.clock.time;
       console.log("la clock est: " + dateStart.value);
       clockId.value = store.clock.id;
-      store.working = store.clock.status === true;
+      if (store.clock.status) {
+        store.working = true;
+      } else {
+        store.working = false;
+      }
     } catch (error) {
       console.error("Erreur lors de la récupération de l'utilisateur :", error);
     }

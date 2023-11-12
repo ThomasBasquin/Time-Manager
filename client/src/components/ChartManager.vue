@@ -67,7 +67,7 @@
 
         // Calculer le temps travaillé par rapport aux 35 heures
         const hoursPerWeek = 35;
-        const workPercentage = (totalWorkHours / (hoursPerWeek * 7)) * 100;
+        const workPercentage = (totalWorkHours / (hoursPerWeek * 5)) * 100;
 
         this.createChart(workPercentage);
       },
