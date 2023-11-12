@@ -11,7 +11,7 @@ do
   sleep 2
 done
 
-# Create, migrate, and seed database if it doesn't exist.
+# Create, migrate, and seed database if it doesn't exist
 if [[ -z `psql -Atqc "\\list $DBDATABASE" -h $DBHOST -p $DBPORT -U $DBUSER` ]]; then
   echo "Database $DBDATABASE does not exist. Creating..."
   mix ecto.create
