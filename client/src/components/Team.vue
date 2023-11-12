@@ -1,7 +1,7 @@
 <script setup>
 import { store } from "@/store.ts";
 import axios from "axios";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { dateFormat } from "@/utils/date";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "./ui/input";
@@ -9,15 +9,26 @@ import { Button } from "./ui/button";
 let workingTimes = ref([]);
 let isLoaded = ref(false);
 let email = ref("");
+let renderComponent = ref(true);
 
 let user_teams = [];
+
+const forceRender = async () => {
+    // Here, we'll remove MyComponent
+    renderComponent.value = false;
+
+    // Then, wait for the change to get flushed to the DOM
+    await nextTick();
+
+    // Add MyComponent back in
+    renderComponent.value = true;
+};
 
 // Get the number of working times of the team today
 async function getTodayWorkingTimes() {
     let todayWorkingTimes = [];
     console.log(store.team_workingtimes);
-    let team_workingtimes = Array.from(store.team_workingtimes);
-    team_workingtimes.forEach((workingTime) => {
+    store.team_workingtimes.forEach((workingTime) => {
         if (workingTime.start.includes(new Date().toISOString().slice(0, 10))) {
             todayWorkingTimes.push(workingTime);
         }
@@ -56,7 +67,7 @@ async function getWorkingTimes() {
     FilteredWorkingTimes.sort((a, b) => {
         return new Date(b.start) - new Date(a.start);
     });
-    store.team_today_workingtimes = await getTodayWorkingTimes();
+    
     return FilteredWorkingTimes;
 }
 
@@ -74,6 +85,8 @@ async function getUsers() {
     console.log(user_teams);
     isLoaded.value = true;
     store.team_workingtimes = await getWorkingTimes();
+    store.team_today_workingtimes = await getTodayWorkingTimes();
+    forceRender();
     console.log(store.team_workingtimes);
 }
 
@@ -104,12 +117,14 @@ async function addUser() {
     console.log(response2.data);
 }
 
-
+setInterval(() => {
+    forceRender();
+}, 1000);
 
 await getTeam();
 </script>
 <template>
-    <div class="flex items-center justify-center flex-col">
+    <div class="flex items-center justify-center flex-col" v-if="renderComponent">
         <div class="flex flex-col md:flex-row space-x-10 items-center justify-center">
             <Card class="flex flex-col items-center justify-center my-2 space-y-3">
                 <CardTitle class="mt-2">
